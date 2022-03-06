@@ -3,6 +3,8 @@ import java.util.Random;
 
 public class TableTennisScoring {
 
+	public static boolean isRule10Active = false;
+	
 	public static void main(String[] args) {
 		
 		
@@ -33,6 +35,7 @@ public class TableTennisScoring {
 		
 		// Break only when winner is decided
 				while (true) {
+					
 					if(isPlayer1) {
 						countOfServe++;
 					}
@@ -52,10 +55,10 @@ public class TableTennisScoring {
 						isPlayer1 = isPlayer1 == true ? false : true;
 						countOfServe = 0;
 					}
-					
-					isRule10Active = isRule10Active(scoreP1, scoreP2, isRule10Active);
+						
 					
 					if(scoreP1 > 10 || scoreP2 >10) {
+						isRule10Active = isRule10Active(scoreP1, scoreP2);
 						winner = checkWhoWins(scoreP1,scoreP2,isRule10Active) ;
 					}
 					
@@ -74,12 +77,16 @@ public class TableTennisScoring {
 	 * @param isRule10Active
 	 * @return true if difference of 2 is required for winning
 	 */
-	public static boolean isRule10Active(int scoreP1, int scoreP2, boolean isRule10Active) {
-		if(scoreP1==10 && scoreP2==10)
+	public static boolean isRule10Active(int scoreP1, int scoreP2) {
+		if((scoreP1==10 && scoreP2==10) || (isRule10Active && scoreP1 < 20 && scoreP2 < 20)) {
 			isRule10Active = true;
-		else if(scoreP1 == 20 && scoreP2 == 20)
+			return isRule10Active;
+		}		
+		else if(scoreP1 == 20 && scoreP2 == 20) {
 			isRule10Active = false;
-		return isRule10Active;
+			return isRule10Active;
+		}
+		return false;
 	}
 
 	/**
@@ -93,14 +100,14 @@ public class TableTennisScoring {
 	public static String checkWhoWins(int scoreP1, int scoreP2,boolean isRule10Active) {
 		String winner = null;
 			
-		if(isRule10Active) {
-				if(Math.abs(scoreP2-scoreP1) >=2 ) {
-					winner = (scoreP2>scoreP1 ? "P2" : "P1");
-				}	
-			}
-		else if(Math.abs(scoreP2-scoreP1) >=1){
-			winner = (scoreP2>scoreP1 ? "P2" : "P1");
-			return winner;
+		if (scoreP1 > 10 || scoreP2 > 10) {
+			if (isRule10Active) {
+				if (Math.abs(scoreP2 - scoreP1) >= 2) {
+					winner = (scoreP2 > scoreP1 ? "P2" : "P1");
+				}
+			} else if (Math.abs(scoreP2 - scoreP1) >= 1) {
+				winner = (scoreP2 > scoreP1 ? "P2" : "P1");
+			} 
 		}
 		return winner;
 	}
